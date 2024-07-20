@@ -2,6 +2,7 @@ package com.bs.spring.demo.controller;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,7 +10,12 @@ import javax.servlet.http.HttpSession;
 import javax.sql.rowset.serial.SerialException;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.bs.spring.demo.model.vo.Address;
+import com.bs.spring.demo.model.vo.Demo;
 
 @Controller //<-- 클래스 빈으로 등록
 public class DemoController {
@@ -60,9 +66,76 @@ public class DemoController {
 		System.out.println(email);
 		System.out.println(gender);
 		System.out.println(Arrays.toString(hobby));
+	
+		Demo demo = Demo.builder().devName(name)
+				.devAge(age)
+				.devGender(gender)
+				.devEmail(email)
+				.devLang(hobby)
+				.build();
 		
-		return "demo/demo1";
+		request.setAttribute("demo", demo);
+		
+		return "demo/demoResult";
 	}
 	
+	//클라이언트 요청주소 /demo/demo2인 서비스 만들기
+	@RequestMapping("/demo/demo2") 
+	public String demo2(String devName, int devAge, 
+			String devEmail, String devGender, String[] devLang, 
+			Model model)throws SerialException, IOException{
+		
+		System.out.println(devName+" "+devAge+" "+devEmail+" "+devGender+" "+Arrays.toString(devLang));
+		
+		Demo d = Demo.builder()
+				.devName(devName)
+				.devAge(devAge)
+				.devGender(devGender)
+				.devEmail(devEmail)
+				.devLang(devLang)
+				.build();
+		
+		model.addAttribute("demo", d); // == request.setAttribute("demo",d);
+		
+		return "demo/demoResult";
+	}
+	
+	//파라미터값에 대한 상세설정하기
+	//@RequestParam어노테이션을 사용
+	//파리미터값을 매핑, 기본값설정, 필수값여부를 설정
+	@RequestMapping("/demo/demo3")
+	public String demo3(
+			@RequestParam(name = "name") String devName,
+			@RequestParam(defaultValue = "10", required = false) int devAge,
+			@RequestParam String devEmail,
+			@RequestParam String devGender,
+			@RequestParam String[] devLang
+			) {
+		
+		//Demo demo = new Demo(devName, devAge, devEmail, devGender, devLang);
+		
+		System.out.println(devName+" "+devAge+" "+devEmail+" "+devGender+" " +Arrays.toString(devLang));
+		
+		return "demo/demo";
+	}
+	
+	//객체자체로 파라미터값을 받아오기
+	// 파라미터의 name값과 클래스의 필드값이 일치해야함
+	@RequestMapping("/demo/demo4")
+	public String demo4(Demo demo, Address address) {
+		demo.setMyaddress(address);
+		System.out.println(demo);
+		return "demo/demo";
+	}
+	
+	//파라미터 데이터 Map형식으로 받아서 처리하기
+	@RequestMapping("/demo/demo5")
+	public String demo5(@RequestParam Map param) {
+		System.out.println(param); //Map은 단일 값으로만 가져온다. devLang같은 경우 맨 처음에 있는 값 1개를 가져온다.
+		return "demo/demo";
+	}
+	
+	//jsp에 출력할 데이터 전달하기
+
 	
 }
