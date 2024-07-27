@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="student">
+	
+	<resultMap type="com.bs.spring.model.vo.Student" id="studentMap">
+	<!-- 컬럼명과 필드명을 매칭할때 사용
+		테이블의 컬럼명과 저장하는 vo클래스의 필드명이 다를때 사용
+	 -->
+		<id column="student_id" property="studentId"/>
+		<result column="student_pwd" property="studentPwd"/>
+		<result column="student_name" property="studentName"/>
+		<result column="student_grade" property="studentGrade"/>
+		<result column="student_nickname" property="studentNickname"/>
+		<result column="school_name" property="schoolName"/>
+		<result column="enroll_date" property="enroll_date"/>
+	</resultMap>
+	
+	<select id="selectStudentById" resultMap="studentMap" parameterType="string">
+	<!-- resultType="com.bs.spring.model.vo.Student"> -->
+		SELECT * FROM STUDENT WHERE STUDENT_ID=#{id}
+	</select>
+	
+	<insert id="insertStudent" parameterType="com.bs.spring.model.vo.Student">
+		INSERT INTO STUDENT VALUES(#{studentId}, #{studentPwd}, #{studentName}, #{schoolName}, #{studentGrade}, #{studentNickname}, default)
+	</insert>
+	
+	
+</mapper>

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.bs.spring.student.model.vo.Student;
 
 @Controller
-public class StudentController {
+public class ex_StudentController {
 	@RequestMapping("/student/enrollstudent.do")
 	public String student(String name, String age, 
 			String hak, String ban, String hakka,

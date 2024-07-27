@@ -7,6 +7,30 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
 		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+	
+	<!-- 
+		DB접속을 위한 클래스 bean으로 등록하기
+		1. DB접속에 대한 정보를 저장하는 클래스 등록 -> BasicDataSource클래스
+		2. SqlSession을 생성해주는 클래스를 등록 -> SqlSessionFactoryBean클래스
+		3. SqlSession 구현체 클래스 등록 -> mybatis-spring에서 제공하는 SqlSessionTemplate클래스
+		dbcp다큐먼트? 검색하면 정보를 얻을 수 있다고 한다. 
+		destroy-method="close" 이건 내가 일일이 close를 안해도 destroy-method="close"이 친구가 알아서 닫아준다.
+	 -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+		<property name="username" value="spring"/>
+		<property name="password" value="spring"/>
+	</bean>
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml"/> <!-- 필요한 속성을 설정함 -->
+		<property name="mapperLocations" value="classpath:mappers/**/*.xml"/> <!-- sql문을 저장함 / **은 모든 폴더를 선택하는거임 -->
+	</bean>
+	
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+		
+	</bean>
 </beans>
-
-

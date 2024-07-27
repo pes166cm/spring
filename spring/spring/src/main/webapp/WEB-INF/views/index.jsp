@@ -9,6 +9,7 @@
 	<p>"/main" , "main"</p>
 	<a href="${pageContext.request.contextPath }/main">/main 내가 만든 페이지</a><br>
 	<a href="${path }/main">main 내가 만든 페이지</a><br>
-	<a href="${path }/student/enrollstudent.do">학생정보</a>
+	<a href="${path }/student/enrollstudent.do">학생정보</a><br>
+	<a href="${path }/testStudent">학생조회</a>
 </section>
 <jsp:include page="/WEB-INF/views/common/footer.jsp"/>
